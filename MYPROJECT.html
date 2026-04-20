@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+            text-align: right;
+            direction: rtl;
+            /* important for Arabic */
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 1rem 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 0.5rem 0;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav li {
+            margin: 0 0.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #00d4ff;
+        }
+
+        /* Page Sections */
+        .page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 3rem;
+            /* scroll-snap-align: start; */
+        }
+
+        /* 
+        #page1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            flex-direction: column;
+            color: white;
+        } */
+
+
+        #page1 {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
+            flex-direction: column;
+            color: white;
+            text-align: center;
+
+        }
+
+        #page1 h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        #page1 h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        /* 
+
+        #page1 h1 { font-size: 3.5rem; margin-bottom: 1rem; animation: fadeInDown 1s ease; }
+        #page1 h2 { font-size: 1.8rem; color: #f39c12; margin-bottom: 1rem; animation: fadeInUp 1.2s ease; }
+
+         */
+        .presenter {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        #page2 {
+            background: linear-gradient(135deg, #f093fb 0%, #9fedf4 100%);
+            flex-direction: column;
+            color: white;
+        }
+
+        #page2 p {
+            max-width: 800px;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .topic-page {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            width: 90%;
+            max-width: 900px;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+
+        .topic-header h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .topic-header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1rem;
+        }
+
+        .text-container p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: white;
+        }
+
+        .myintrro {
+            margin-left: 70%;
+            color: white;
+            text-align: right;
+        }
+
+        #intro2 {
+            margin-top: 50px;
+            /* width: 95%; */
+        }
+
+        .introo {
+            color: white;
+            text-align: right;
+            width: 80%;
+            margin-bottom: 20px;
+        }
+
+        /* #myvideo {
+            justify-content: center;
+        } */
+
+        #myvideo {
+      padding-left: 30%;
+        }
+
+        .headvid {
+            text-align: center;
+
+        }
+
+        #page1 h2 {
+            color: white;
+            font-size: 50px;
+        }
+
+        #intro3 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+
+        }
+
+        /* 
+        #section2 h1 {
+            margin-right:70% ;
+            margin-bottom: 70% ;
+        } */
+
+        #summary {
+            direction: rtl;
+            /* Right-to-left for Arabic */
+            text-align: right;
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        #summary h1 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #333;
+            text-align: center;
+        }
+
+        #summary ol {
+            list-style-type: decimal;
+            /* numbers for all items */
+            padding-right: 20px;
+            /* space for numbers in RTL */
+        }
+
+        #summary li {
+            margin-bottom: 10px;
+            font-size: 20px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            line-height: 2;
+            background-color: #b4f3ff;
+            border-radius: 5%;
+        }
+
+
+        .bilingual-container {
+            display: flex;
+            width: 96%;
+            max-width: 1200px;
+            gap: 20px;
+            margin: auto;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .side {
+            flex: 1;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background: white;
+            transition: transform 0.3s ease;
+        }
+
+        .side:hover {
+            transform: translateY(-5px);
+        }
+
+        .english-side {
+            direction: ltr;
+            text-align: left;
+            border-left: 5px solid #2980b9;
+            font-family: 'Georgia', serif;
+        }
+
+        .arabic-side {
+            direction: rtl;
+            text-align: right;
+            border-right: 5px solid #e67e22;
+        }
+
+        .transliteration {
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .translation-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            display: block;
+        }
+
+        #lastsection {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 95%;
+            /* gap: 20px; */
+            margin: auto;
+            animation: fadeIn 1.5s ease;
+            padding-right: 200px;
+        }
+
+        #lastsection div {
+
+            max-width: 90%;
+            min-height: 300px;
+            margin-bottom: 100px;
+            padding: 60px;
+            background-color: #95ddff;
+            font-size: 20px;
+        }
+
+        #lastsection h1 {
+            padding-left: 100px;
+        }
+
+        /* #div1 {
+           
+            margin-top: 100px;
+        } */
+
+        #lastsection #div0 {
+
+            background-color: #a0ffff;
+
+        }
+
+        /* Scroll Snap */
+        html {
+            scroll-snap-type: y mandatory;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .topic-page {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="#page1">الرئيسية</a></li>
+            <li><a href="#page2">المقدمة</a></li>
+            <li><a href="#summary">الملخص</a></li>
+            <li><a href="#myvideo">فيديو</a></li>
+            <li><a href="#lastsection">الصيغ البلاغية</a></li>
+
+        </ul>
+    </nav>
+
+    <section id="page1" class="page">
+        <h1>تعاليم أمنمحات الأول لابنه سنوسرت الأول</h1>
+        <h2>تحت إشراف د/ وجدي وجيه</h2>
+        <div class="presenter">مقدمة من الطالبة: جودي أحمد</div>
+    </section>
+
+    <section id="page2" class="page">
+        <h2>المقدمة</h2>
+
+        <p class="myintrro">
+            الفترة التاريخية: الدولة الوسطى <br>
+            الخط: الهيراطيقي<br>
+            <br>أنماط الكتابة: مخطوطات ونقوش
+            <br> مواد الكتابة للمخطوطات: ورق البردي وقلم البوص
+        </p>
+        <p class="introo" id="intro2">
+
+            المصدر الرئيسي: بردية ميلينجن، نسخت بواسطة أ. بيرون عام 1843، لكن لاحقا فقد البردي الأصلي. يؤرخ هذا المخطوط
+            من خلال أسلوب خطه إلى النصف الثاني من الأسرة الثامنة عشرة. وقد استخدم في علم المصريات كمصدر مخطوط رئيسي،
+            لأنه يقدم أوضح وأطول نسخة من التعاليم. كما تم الحفاظ على أجزاء من العمل في ثلاث ألواح خشبية من الأسرة
+            الثامنة عشرة، وبعض شظايا البردي، والعديد من الأوستراكات من الدولة الحديث
+
+        </p>
+        <p class="introo" id="intro3">الأسلوب الخَطابي مستخدم في النص كله، باستثناء وصف الاغتيال الذي صور بأسلوب نثري.
+        </p>
+
+        <p class="introo" id="intro 4">التعاليم هي واحدة من اهم انواع الادب المصري فهي تعليمات في الحكمة يوجهها الاب
+            المسن امنمحات الأول الى ابنه الأكبر سنوسرت الاول واطفاله الاخرين الذين على وشك ان يخلفوه هذه الشهادات التي
+            تعكس خبرة حياة كاملة تقدم نصائح حول وسائل النجاح في الحياة العامة وتعبر عن استمرار القيم الاخلاقية
+            والاجتماعية </p>
+        <p class="introo">الملك التاريخي أمنمحات الأول توفي بعد حكم دام ثلاثين سنة (حوالي 1938-1908 ق.م)، وقد وصفت وفاته
+            بأنها غير متوقعة في قصة سنوهي. في تعليمه يظهر لابنه في حلم ويخبره بمحاولة اغتيال، والتي يشير إليها النص
+            الشعري على أنها السبب في وفاته.</p>
+        <p class="introo">عند دراسته لأول مرة، اعتبر النص عملا أصيلا للملك أمنمحات الأول، كتبه بعد أن نجا من محاولة
+            اغتيال. الرأي السائد حالياً هو أن الملك قتل بالفعل في السنة الثلاثين من حكمه، وأن النص كتبه كاتب ملكي بأمر
+            الملك الجديد، سنوسرت الأول.</p>
+        <p class="introo">تروى محاولة قتل الملك بطريقة متعمدة لتكون مخفية؛ ومع ذلك، هناك دلائل كافية في السرد وأماكن
+            أخرى في النص لتوصل إلى جمهور الدولة الوسطى أن المتحدث هو الملك الراحل الذي يخاطب ابنه في وحي، وللجماهير
+            اللاحقة، بما في ذلك الجمهور المتعلم في الدولة الحديثة، أن العمل كتبه كاتب البلاط.</p>
+        <p class="introo" id="deintro">إنه تركيب قوي وخيالي، يتميز بالنبرة الشخصية وبالمرارة المولودة من تجربة الملك
+            العجوز الذي يوبخ خيانة تابعيه، ويحذر ابنه من الثقة بأي إنسان. وبالتالي، الموضوع الأساسي هو اغتيال الملك. يعد
+            هذا العمل وحيداً من نوعه</p>
+
+    </section>
+
+    <section id="summary" class="page">
+        <h1>الملخص</h1>
+        <ol>
+            <li> <br>البداية والتحفيز الإلهي
+                الملك يحث ابنه على النهوض كالآلهة، الاستماع لنصائحه، وأن يحكم الأرض والنيل ويبلغ الكمال المطلق.
+            </li>
+            <li>الحذر من التابعين والمقربين <br>
+                ينصح بعدم الثقة المفرطة بالموظفين أو المقربين، وعدم تكوين صداقات حميمة، لأن ذلك عديم الجدوى.
+            </li>
+            <li>الاعتماد على النفس في الشدة <br>
+                يحذر من عدم وجود خدم أو معونة في أوقات الشدة، ويذكر أنه ساعد الضعفاء واليتامى.
+            </li>
+
+            <li>
+                مكائد المكرمين<br>
+                الأشخاص الذين أكرمهم الملك أحيانا يسيئون أو يستخفون به، رغم ما قدم لهم.
+            </li>
+            <li>
+                الملك كتجسيد إلهي<br>
+                يشدد على تميز الملك وفرادته، وأن صورته خاصة ومختلفة عن البشر، ويجب أن تخلد.
+            </li>
+            <li>
+                عندما نام استيقظ على أسلحة وجهت له
+            </li>
+            <li>
+                الاعتماد على الحماية<br>
+                الملك يستيقظ على الهجوم، ويدرك أنه لا يمكن القتال وحده، وأن الحامي ضروري للنجاح.
+            </li>
+            <li>
+                الهجوم الغافل<br>
+                يصف كيف وقع الهجوم قبل أن يتسلم الابن السلطة، وأن الملك لم يخف ولم يتوقعه، مشيرًا إلى تقصير الخدم.
+            </li>
+            <li>
+                إنجازات الملك الفردية<br>
+                يذكر أنه لم يسبق لنساء أو رجال أن قادوا جيوشا أو نظموا الشعب كما فعل هو، وأن لحظته البطولية فريدة.
+            </li>
+            <li>
+                الحدود والسيطرة على الأرض<br>
+                يصف تنقله في مصر من الجنوب إلى الشمال، ومعرفته بحدود الأرض والحصون، وقوته وسلطته على الجميع.
+            </li>
+            <li>
+                الحماية الاقتصادية للشعب<br>
+                الملك اعتنى بالمحاصيل والفيضانات، ولم يعاني أحد من جوع أو عطش، وكل شيء في مكانه الصحيح.
+            </li>
+            <li>
+                النجاحات العسكرية والسياسية<br>
+                الملك أخضع النوبة والميدجاي وجعل الآسيويين يتبعونه، مؤكدا قوته العسكرية والسياسية.
+            </li>
+            <li>
+                القصور والخلود<br>
+                وصف قصره المهيب بالذهب واللازورد والفضة، مزود للحياة الأبدية، كرمز للخلود وملكوت الأرض.
+            </li>
+            <li>
+                يحذر من الأكاذيب ويعطي الحب لابنه<br>
+                يحذر من الأكاذيب المنتشرة، ويعطي الابن بركة العيش والازدهار، مع التعبير عن محبته الخاصة له.
+            </li>
+            <li>
+                تأكيد استمرار الملكية<br>
+                الملك يختتم بأن الماضي مصنوع والمستقبل مرتب، وأن الابن سيرتدي التاج الأبيض كإله، ويعيش في ابتهاج
+                السلطة، مع المحافظة على الملكية كما كانت.
+            </li>
+        </ol>
+    </section>
+
+
+    <section id="lastsection" class=”page” style="background: #a0ffff;">
+        <h1>الصيغ البلاغية</h1>
+        <div id="div0">
+            <p>تميّز المصري القديم بفصاحة لغوية عالية وقدرة واضحة على التعبير الدقيق. وقد استخدم المصري القديم الصيغ
+                البلاغية بأسلوب واعٍ ومقصود، لإبراز المعاني وتقوية التأثير في المتلقي. ويعكس هذا الاستخدام الدقيق
+                للبلاغة مدى تطور الفكر والذوق الأدبي لديه، مما يجعل النصوص المصرية القديمة نموذجا مميزا للثراء اللغوي
+                والبلاغي.</p>
+        </div>
+        <div id="div1">
+
+            <h2>التشبيه والنداء والمقابل</h2>
+            <p> <br> التشبيه : <br>
+ <br>تقريب معنى الكلمات والعبارات بما هو مقارب لها لتوضيح المعنى <br> 
+ - <br>قائلا :"انهض كإله" - d̲d.f  ḫꜥ m nt̲r (نص 1) <br> 
+- <br>كنت كأفعى الصحراء  r- ḥr.i ir.kwi mi sꜣ-tꜣ n smyt  (نص6)   <br>  
+<br> النداء:  <br>
+<br> هو طلب الاقبال ب (يا) بحيث يلبي المخاطب طلب الداعي <br>      
+   <br>-( يا) سنوسرت ..... (يا) بني s-n-wsrt ꜥnḫ wd̲ꜣ snb sꜣ.i  (نص 14)  <br> 
+
+ <br> المقابلة:  <br> 
+<br> استخدام الكلمات او العبارات وضدها في المعنى بشكل متتالي. <br>
+- <br>لقد أعطيت للمعدم، ورفعت شأن اليتيم، iw di.n.i n šw ꜣw sḫpr.n.i nmḥ (نص 3) <br>  
+
+- <br>ورقيت من لا يملك مثل صاحب الثراء di.n.i pḥ  iwty-n.f mi nty-wn (نص 3) <br>
+- <br>. "يوافق عليها الحكيم، وينكرها الجاهل" (نص 14) <br>
+<br>  <br> iw rḫ ḥr tiw wḫꜣ ḥr nfrw.f 
+</p>
+          
+        </div>
+
+
+        <div id="div2">
+            <h2>التكرار والنهي</h2>
+            <p> <br> يتم تكرار بعض الكلمات والعبارات لتأكيد المعنى <br>
+ <br>والنهي كل ما يدل على ترك فعل ومنع باستخدام لا <br> 
+
+ .1 <br>تكرار النهي: "لا تقترب، لا تثق، لا تُكوِّن"  (نص 2)  <br> 
+ <br>  لا تقترب منهم وحدك! <br> m tkn im.sn m wꜥw.kwi  
+ <br>  لا تثق بأحد كأخ! لا تُكوِّن صديقا! <br> m mḥ ib.k m sn m rḫ  ḫnms 
+ <br>لا تُكوّن صداقات حميمة/مقربين - فهي عديمة الجدوى.  <br> m sḫprw n.k ꜥḳw nn km iry
+
+<br> 2. لكن لا يوجد بطل في الليل، ولا أحد يمكنه القتال وحده. nn swt ḳn grḥ nn ꜥḥꜣ wꜥty  (نص 7)  <br> 
+ <br>  لا يمكن أن يكون هناك نجاح بدون حامي <br> nn  ḫpr sp mꜥr m- ḫmt n mkw   
+
+
+ .3 <br>تكرار: "قبل أن تسمع… قبل أن أجلس" – (نص8) <br> 
+ <br> قبل أن تسمع المحكمة أنني سأسلمك السلطة، n sd̲mt šnyt sw ꜣd̲.i n.k <br>
+<br> قبل أن أجلس انا معك واضع خططك n ḥmst.i ḥnꜥ.k iḫ iry.i sḫrw.k <br>
+</p>
+        </div>
+
+        <div id="div3">
+
+            <h2>المبالغة والنفي</h2>
+            <p> المبالغة: 
+ <br> أسلوب بلاغي يقوم على تجاوز الحدّ المعتاد في الوصف، بهدف تقوية المعنى والتأثير في المتلقي، دون الالتزام بالدقة الحرفية.  <br>
+ <br> لم يحدث مثل (ذلك في) عملي البطولي n ḫpr mitt sp.i m ir ḳnn(نص 9) <br>
+<br>" انظروا، لقد صنعتُ الماضي، ورتبتُ المستقبل. mk ir.n.i ẖr-ḥꜥt t̲s.i n.k pḥw (نص 15) <br> 
+
+ <br> امر<br> 
+ <br> امر: هو طلب حدوث شى والالزام به وهو نقيض النهي<br> 
+
+ <br>- "في نومك، احرس قلبك بنفسك" (نص 3)  sd̲r.k s ꜣw n.k ib.k d̲s.k <br>
+<br> -.(عش! ازدهر! كن بخير!)" (نص 14) ꜥnḫ wd̲ꜣ snb <br>
+<br> -انظروا… mk (نص 15) <br>
+<br> -أقيموا المعالم، وثبتوا مواقع قواتكم. sꜥḥꜥ mnw.k smnḫ rwd.k (نص 15) <br>
+<br> - قاتلوا… ꜥḥꜣ (نص 15) <br> 
+
+<br> النفي<br>
+<br> النفي: هي طريقة لنقض فكرة او حجة او موضوع – نفي الجملة باستخدام أدوات مثل لا ليس ما <br>
+
+
+<br> 1-"لم تسمع من قبل… لم تر من قبل" (نص 5)  <br>   
+<br> -اصنعوا لي مرثية لم تسمع من قبل. irw n.i ḳꜣmdt nty n sd̲m.tw.f <br>
+<br> -عظمة القتال أيضًا لم تر من قبل. irw n.i ḳꜣmdt nty n sd̲m.tw.f <br>
+<br> 2-"لم يذق أحد الجوع… ولم يعطش أحد". (نص 11) <br>
+<br>- لم يذق أحد الجوع في سنواتي، ولم يعطش أحد حينها. n ḥḳr.tw m rnpwt.i n ib.tw im <br>
+
+<br> 3-أنتم من نسل الإله… فلا أحد أحبه سواكم" (نص 15) <br>
+ḥr-ntt nn mr.n.f sw r-gs ḥm.f ꜥnḫ wd̲ꜣ snb <br>  <br>
+</p>
+        </div>
+
+        <div id="div4">
+
+            <h2>الاستفهام والشرط</h2>
+            <p>   <br>استفهام:  <br>
+ <br>اسنفهام: هي صيغة يستخدمها السائل لمعرفة شى ما بهدف الاستخبار او الاستعلام <br> 
+<br> (نص 9) <br>
+<br> هل سبق ان ربت النساء جيوشا؟ in iw pꜣ.n ḥmwt t̲s skw <br>
+<br> هل سبق ان ربي متمردون داخل المنزل؟ in iw šd.tw ẖnnw m ẖnw pr <br>
+<br> هل سبق ان فتح الماء على التربة in iw wbꜣ.tw mw ꜣdd gb <br>
+<br> ويدمر البسطاء وهم يؤدون أعمالهم؟ swḫꜣ.tw nd̲sw ḥr iryt.sn <br>
+<br> الشرط     <br>     
+ <br> تركيب لغوي يتكون من جملتين مترابطتين، تعلق فيهما جملة على تحقق جملة اخرى باستخدام اداة من ادوات الشرط ومنها لو لولا لوما اذا <br>    
+
+<br>1 -"إذا قاتلت… فلن يكون هناك نتيجة جيدة"  (نص 5) <br> 
+
+<br>    -انظر، إذا قاتلت في الحلبة، غافلا عما حدث بالأمس، <br> ist ꜥḥꜣ.tw ḥr mtwn smḫ sf
+<br>  -فلن يكون هناك نتيجة جيدة لمن هو غير واع <br> n km n bw-nfr n  ḫm-rḫ.f
+
+
+<br> 2-شرط: "لو كنت قد أمسكت بالأسلحة… لكنت قد أعدت هذا المجرم" (نص 7)  <br>
+
+ <br>  لو كنت قد أمسكت بالأسلحة بسرعة، ir šsp.i ꜣst  ḫꜥw m drt.i <br>
+<br>  لكنت جعلت هذا المجرم يتراجع في حالة ارتعاش، iw di.n.i  ḫt ḥmw m-ꜥ bꜣb ꜣ [.tw] <br>
+</p>
+        </div>
+
+    </section>
+
+    <section class="page">
+        <div id="myvideo">
+            <h1 class="headvid"> فيديو تعاليم امنمحات الاول لابنه </h1>
+
+            <video id="vid" width="640" height="360" controls>
+
+                <source src="جودي.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </section>
+    
+   
+
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    </script>
+
+</body>
+
+</html>
